@@ -2,6 +2,12 @@
 #define ADC_SCK  8  // CLCK 2
 #define ADC_PDN  6  // PDWN
 
+#define ADC_MUX0 A2 // A0 on ADS1232 chip
+#define ADC_MUX1 A3 // TEMP
+
+#define ADC_GAIN0 11
+#define ADC_GAIN1 10
+
 void wait50ns()
 // wait at least 50ns
 {
@@ -44,9 +50,19 @@ void setup()
   pinMode( ADC_MISO, INPUT );  
   pinMode( ADC_SCK, OUTPUT );
   digitalWrite( ADC_SCK, LOW );
+
+  pinMode( ADC_GAIN0, OUTPUT );
+  pinMode( ADC_GAIN1, OUTPUT );
+  digitalWrite( ADC_GAIN0, LOW ); // set Gain=1 (for temperature test)
+  digitalWrite( ADC_GAIN1, LOW );
+  
+  pinMode( ADC_MUX0, OUTPUT );
+  pinMode( ADC_MUX1, OUTPUT );
+  digitalWrite( ADC_MUX0, LOW ); // only AINP1/AINN1 are connected
+  digitalWrite( ADC_MUX1, HIGH ); // test - read temperature
   
   Serial.begin( 9600 );
-  Serial.println( "ADC convertor output ..." ); 
+  Serial.println( "ADC convertor output ... (temperature test)" ); 
 }
 
 void loop()

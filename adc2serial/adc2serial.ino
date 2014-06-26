@@ -11,6 +11,16 @@
 
 #define PWR_BTN 5
 
+// connection without tensiometric sensor
+//
+// X3-1 – wire – X3-3
+// X3-2 – wire – X3-4
+// X3-1 – odpor 2k2 – X3-6 – odpor 1R0 – X3-5 – odpor 2k2 – X3-2
+// spotreba sice neodpovida, ale readout by nejaky mel byt. Pokud chcete cist readout opacneho znamenka:
+// X3-1 – odpor 2k2 – X3-5 – odpor 1R0 – X3-6 – odpor 2k2 – X3-2
+// nulovy readout:
+// X3-1 – odpor 2k2 – X3-6 – zkrat  – X3-5 – odpor 2k2 – X3-2
+
 void wait50ns()
 // wait at least 50ns
 {

@@ -1,12 +1,15 @@
 #define ADC_MISO 7  // DRDY_DOUT 1
 #define ADC_SCK  8  // CLCK 2
 #define ADC_PDN  6  // PDWN
+#define nADC_POWER 9 // low enables the 5V regulator for gauge and ADC analog part
 
 #define ADC_MUX0 A2 // A0 on ADS1232 chip
 #define ADC_MUX1 A3 // TEMP
 
 #define ADC_GAIN0 11
 #define ADC_GAIN1 10
+
+#define PWR_BTN 5
 
 void wait50ns()
 // wait at least 50ns
@@ -43,13 +46,24 @@ int readADC()
 
 void setup()
 {
+  // CPU takes-over the power controll
+  pinMode( PWR_BTN, OUTPUT);
+  digitalWrite( PWR_BTN, HIGH);
+  //RTC seq:
+  // nastavit datum, cas
+  // nastavit kdy ma budit
+  // nastavit mod RTC pinu#5
+  // povolit RTC Interrupt Output
+
   // power up the ADC module
+  pinMode( nADC_POWER, OUTPUT);
+  digitalWrite( nADC_POWER, LOW);
   pinMode( ADC_PDN, OUTPUT );
-  digitalWrite( ADC_PDN, HIGH );
+  digitalWrite( ADC_PDN, LOW );	//LOW aby se resetoval, nechat po dobu pripravy pinu
   
   pinMode( ADC_MISO, INPUT );  
   pinMode( ADC_SCK, OUTPUT );
-  digitalWrite( ADC_SCK, LOW );
+  digitalWrite( ADC_SCK, LOW ); //presunout pred digitalWrite( ADC_PDN, HIGH )
 
   pinMode( ADC_GAIN0, OUTPUT );
   pinMode( ADC_GAIN1, OUTPUT );
@@ -60,7 +74,10 @@ void setup()
   pinMode( ADC_MUX1, OUTPUT );
   digitalWrite( ADC_MUX0, LOW ); // only AINP1/AINN1 are connected
   digitalWrite( ADC_MUX1, HIGH ); // test - read temperature
-  
+    
+  wait50ns();
+  digitalWrite( ADC_PDN, HIGH ); //povolit ADC
+    
   Serial.begin( 9600 );
   Serial.println( "ADC convertor output ... (temperature test)" ); 
 }
@@ -69,4 +86,3 @@ void loop()
 {
   Serial.println( readADC() );
 }
-

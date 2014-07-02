@@ -30,12 +30,13 @@ void wait50ns()
   ::);
 }
 
-int readADC()
+long readADC()
 {
   // typical 100ms for slow (speed = 0) reading
   while( digitalRead(ADC_MISO) == HIGH )
     ;
-  int i, ret = 0;
+  int i;
+  long ret = 0;
   for( i = 0; i < 24 + 1; i++ ) // force extra high bit
   {
     ret <<= 1;
